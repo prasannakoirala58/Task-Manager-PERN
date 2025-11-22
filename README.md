@@ -65,8 +65,11 @@ A full-stack **Task Manager Dashboard** built using **PERN** (PostgreSQL, Expres
 ## 🧰 Tech Stack
 
 **Frontend:** React, Redux, TailwindCSS, Axios
+
 **Backend:** Node.js, Express.js, Prisma, JWT, bcrypt
+
 **Database:** PostgreSQL (Prisma Data Platform)
+
 **Deployment:** Vercel (frontend), Render (backend)
 
 ---

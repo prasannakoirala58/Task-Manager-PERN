@@ -1,0 +1,11 @@
+/* Import Lato from Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: "Lato", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}

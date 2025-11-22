@@ -18,7 +18,8 @@ A full-stack **Task Manager Dashboard** built using **PERN** (PostgreSQL, Expres
 
 ## 📸 Application Preview
 
-![Task Manager Preview](./preview.png)
+<img width="1512" height="834" alt="image" src="https://github.com/user-attachments/assets/65512a3a-2811-48d0-997e-df6ab2e5b95d" />
+
 
 ---
 

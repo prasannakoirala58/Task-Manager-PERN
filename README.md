@@ -1,8 +1,6 @@
 # 🗂️ Task Manager (PERN Stack)
 
-A full‑stack **Task Manager Dashboard** built using **PERN** (PostgreSQL, Express, React, Node.js) with authentication, task CRUD, pagination, sorting, and a clean responsive UI.
-
-This project was built as part of a **Full‑Stack Developer Assignment** and follows industry‑standard best practices.
+A full-stack **Task Manager Dashboard** built using **PERN** (PostgreSQL, Express, React, Node.js) with authentication, task CRUD, pagination, sorting, and a clean responsive UI.
 
 ---
 
@@ -28,93 +26,47 @@ This project was built as part of a **Full‑Stack Developer Assignment** and fo
 
 ### 🔐 Authentication
 
-- JWT‑based login & signup
+- JWT-based login & signup
 - Password hashing using bcrypt
-- Token stored in **localStorage** (assignment‑friendly; explained below)
-- Protected routes using auth middleware
+- Token stored in **localStorage** (assignment-friendly)
+- Auth middleware protects all task routes
 
 ### 📝 Task Management
 
 - Create, read, update, delete tasks
-- Priority levels: **low, medium, high** (ENUM)
+- Priority levels (low, medium, high)
 - End date selection
-- Auto‑highlights overdue tasks
+- Detects & visually marks overdue tasks
 
-### 🔎 Sorting & Filtering
+### 🔎 Sorting & Pagination
 
-- Sort by **due date**, **created date**, or **priority**
+- Sort tasks by **due date**, **created date**, or **priority**
 - Ascending / descending order
-
-### 📄 Pagination
-
-- Server‑side pagination
-- Adjustable page & pageSize (defaults: 1 & 10)
+- Server-side pagination for scalability
 
 ### 🖥️ Frontend
 
-- Built with **React 18 + Redux**
-- TailwindCSS for styling
-- Responsive design
+- React 18 + Redux
+- TailwindCSS
+- Responsive UI
 - Toast notifications
-- Auto‑redirect on login/signup
+- Auto redirect on login/signup
 
 ### 🛠️ Backend
 
-- Modular Express controllers & routes
-- Input validation with express‑validator
-- Prisma ORM with PostgreSQL
-- Secure auth middleware
+- Node.js + Express
+- Prisma + PostgreSQL
+- Input validation with express-validator
+- Modular routes & controllers
 
 ---
 
 ## 🧰 Tech Stack
 
-**Frontend:** React, Redux, TailwindCSS, Axios, React‑Router
-**Backend:** Node.js, Express.js, Prisma ORM, JWT, bcrypt
+**Frontend:** React, Redux, TailwindCSS, Axios
+**Backend:** Node.js, Express.js, Prisma, JWT, bcrypt
 **Database:** PostgreSQL (Prisma Data Platform)
 **Deployment:** Vercel (frontend), Render (backend)
-
----
-
-## 🗄️ Database Schema (Prisma)
-
-```prisma
-generator client {
-  provider = "prisma-client-js"
-}
-
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
-enum Priority {
-  low
-  medium
-  high
-}
-
-model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  tasks     Task[]
-}
-
-model Task {
-  id          Int       @id @default(autoincrement())
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      Int
-  title       String
-  description String
-  priority    Priority  @default(medium)
-  endDate     DateTime
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-}
-```
 
 ---
 
@@ -131,8 +83,8 @@ model Task {
 
 | Method | Endpoint       | Description                             |
 | ------ | -------------- | --------------------------------------- |
-| GET    | /api/tasks     | Fetch user tasks (pagination + sorting) |
-| GET    | /api/tasks/:id | Get single task                         |
+| GET    | /api/tasks     | Fetch tasks (with sorting + pagination) |
+| GET    | /api/tasks/:id | Fetch single task                       |
 | POST   | /api/tasks     | Create task                             |
 | PATCH  | /api/tasks/:id | Update task                             |
 | DELETE | /api/tasks/:id | Delete task                             |
@@ -145,7 +97,7 @@ model Task {
 
 ```
 DATABASE_URL=your_postgres_url
-JWT_SECRET=your_secret_key
+JWT_SECRET=your_secret
 PORT=8000
 ```
 
@@ -159,29 +111,33 @@ REACT_APP_API_BASE_URL=https://task-manager-pern.onrender.com/api
 
 ## 🏗️ Running Locally
 
-### 1. Clone the repo
+### 1. Clone the repository
 
 ```
 git clone https://github.com/prasannakoirala58/Task-Manager-PERN.git
 cd Task-Manager-PERN
 ```
 
-### 2. Install all dependencies
+### 2. Install dependencies (root + frontend + backend)
 
 ```
 npm run install-all
 ```
 
-### 3. Start frontend + backend together
+If you get an error about `concurrently`, install it globally:
+
+```
+npm install -g concurrently
+```
+
+### 3. Start both frontend and backend together
 
 ```
 npm run dev
 ```
 
-➡ Runs:
-
-- Backend → [http://localhost:8000](http://localhost:8000)
-- Frontend → [http://localhost:3000](http://localhost:3000)
+➡ Backend → [http://localhost:8000](http://localhost:8000)
+➡ Frontend → [http://localhost:3000](http://localhost:3000)
 
 ---
 
@@ -189,13 +145,13 @@ npm run dev
 
 ### **Backend (Render)**
 
-Build command:
+**Build command:**
 
 ```
 npm install && npx prisma generate && npx prisma db push
 ```
 
-Start command:
+**Start command:**
 
 ```
 node app.js
@@ -203,14 +159,14 @@ node app.js
 
 ### **Frontend (Vercel)**
 
-- Framework: **Create React App**
-- Build command:
+- Framework: Create React App
+- **Build command:**
 
 ```
 npm run build
 ```
 
-- Output folder:
+- **Output directory:**
 
 ```
 build
@@ -218,16 +174,15 @@ build
 
 ---
 
-## 🔐 Why LocalStorage Instead of Cookies?
+## 🔐 Why LocalStorage?
 
 For this assignment:
 
-- You’re not handling banking‑level security.
-- Render + Vercel separate domains make HTTP‑only cookies harder.
-- LocalStorage works perfectly and keeps the assignment simple.
-- Token is only used for Authorization headers.
+- Simpler than HTTP-only cookies across two different domains (Render + Vercel)
+- Works easily with Authorization headers
+- Good for demo / portfolio projects
 
-If building a production app → HTTP‑only cookies are ideal.
+For production → prefer **HTTP-only cookies**.
 
 ---
 
@@ -242,11 +197,11 @@ If building a production app → HTTP‑only cookies are ideal.
 
 This project demonstrates:
 
-- Clean PERN infrastructure
-- Authentication best practices
-- Prisma ORM + PostgreSQL usage
+- Clean PERN architecture
+- JWT auth & protected routes
+- Prisma ORM mastery
+- Pagination + sorting logic
 - React + Redux state management
-- Sorting, pagination, filtering logic
-- Beautiful UI + fully deployed full‑stack app
+- Fully deployed full-stack workflow
 
-If this helped or impressed you — ⭐ star the repo!
+Feel free to ⭐ star the repo or reach out for collaborations!

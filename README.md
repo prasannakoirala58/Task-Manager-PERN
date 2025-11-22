@@ -12,7 +12,7 @@ PostgreSQL • Express • Prisma • Node.js • React • Redux • TailwindCS
 
 ## 🔗 Live Demo
 
-- **Frontend (Vercel):** https://task-manager-pern-f5upc2dn2-furs-projects-8bede4b9.vercel.app/
+- **Frontend (Vercel):** https://task-manager-pern.vercel.app/
 - **Backend API (Render):** https://task-manager-pern.onrender.com
 
 > You can sign up with a new account and start creating tasks right away.

@@ -1,111 +1,252 @@
-# Task Manager – Full Stack Assignment (PERN Stack)
+# 🗂️ Task Manager (PERN Stack)
 
-A full-stack task management dashboard with authentication, pagination, sorting, and priority management.
+A full‑stack **Task Manager Dashboard** built using **PERN** (PostgreSQL, Express, React, Node.js) with authentication, task CRUD, pagination, sorting, and a clean responsive UI.
 
-**Author:** Prasanna Koirala  
-**Email:** prasanna2koirala@gmail.com
-
-**Tech Stack:**  
-PostgreSQL • Express • Prisma • Node.js • React • Redux • TailwindCSS
+This project was built as part of a **Full‑Stack Developer Assignment** and follows industry‑standard best practices.
 
 ---
 
-## 🔗 Live Demo
+## 🚀 Live Demo
 
-- **Frontend (Vercel):** https://task-manager-pern.vercel.app/
-- **Backend API (Render):** https://task-manager-pern.onrender.com
+### **Frontend (Vercel)**
 
-> You can sign up with a new account and start creating tasks right away.
+🔗 [https://task-manager-pern.vercel.app/](https://task-manager-pern.vercel.app/)
 
----
+### **Backend API (Render)**
 
-## 🖼 Preview
-
-<img width="1512" height="836" alt="image" src="https://github.com/user-attachments/assets/af180373-312f-4ed9-84b9-e77749771358" />
-
+🔗 [https://task-manager-pern.onrender.com](https://task-manager-pern.onrender.com)
 
 ---
 
-## 🚀 Project Overview
+## 📸 Application Preview
 
-This is a fully functional **PERN (PostgreSQL + Express + React + Node)** task management application built as part of a Full Stack Developer Assignment.
-
-It includes:
-
-- ✅ **JWT authentication** (register + login)
-- ✅ **Secure password hashing** with bcrypt
-- ✅ **Protected task routes** using auth middleware
-- ✅ **CRUD operations** for tasks
-- ✅ **Server-side pagination**
-- ✅ **Sorting by due date & priority**
-- ✅ **Overdue task highlighting** on the UI
-- ✅ **Priority enum** using PostgreSQL + Prisma
-- ✅ **Responsive UI** with TailwindCSS
-- ✅ **Global state management** with Redux
+![Task Manager Preview](./preview.png)
 
 ---
 
-## 🧩 Features in Detail
+## ✨ Features
 
-### 1. Authentication
+### 🔐 Authentication
 
-- **Register** with `name`, `email`, `password`.
-- **Login** with email & password.
-- On successful login/register:
-  - A **JWT token** is issued by the backend.
-  - The token is **stored in `localStorage`** on the frontend.
-  - Every API request attaches `Authorization: Bearer <token>` using an Axios interceptor.
-- **Auth middleware** (`auth.js`) verifies the token and injects `req.user` for all protected routes.
+- JWT‑based login & signup
+- Password hashing using bcrypt
+- Token stored in **localStorage** (assignment‑friendly; explained below)
+- Protected routes using auth middleware
 
-> **Why localStorage?**  
-> For this assignment, localStorage keeps the implementation simple and makes it easy to demo. In a production setting, HTTP-only cookies would be preferred to reduce XSS attack surface.
+### 📝 Task Management
+
+- Create, read, update, delete tasks
+- Priority levels: **low, medium, high** (ENUM)
+- End date selection
+- Auto‑highlights overdue tasks
+
+### 🔎 Sorting & Filtering
+
+- Sort by **due date**, **created date**, or **priority**
+- Ascending / descending order
+
+### 📄 Pagination
+
+- Server‑side pagination
+- Adjustable page & pageSize (defaults: 1 & 10)
+
+### 🖥️ Frontend
+
+- Built with **React 18 + Redux**
+- TailwindCSS for styling
+- Responsive design
+- Toast notifications
+- Auto‑redirect on login/signup
+
+### 🛠️ Backend
+
+- Modular Express controllers & routes
+- Input validation with express‑validator
+- Prisma ORM with PostgreSQL
+- Secure auth middleware
 
 ---
 
-### 2. Task Management
+## 🧰 Tech Stack
 
-Each task belongs to a single user and has:
-
-- `title`
-- `description`
-- `priority` (**low**, **medium**, **high**) – stored as a **PostgreSQL enum** via Prisma
-- `endDate` (due date)
-- `createdAt`, `updatedAt`
-
-Users can:
-
-- ➕ Create tasks
-- ✏️ Edit tasks
-- 🗑 Delete tasks
-- 👀 View **only their own** tasks
-
-**Overdue tasks** (due date in the past) are visually highlighted on the UI.
+**Frontend:** React, Redux, TailwindCSS, Axios, React‑Router
+**Backend:** Node.js, Express.js, Prisma ORM, JWT, bcrypt
+**Database:** PostgreSQL (Prisma Data Platform)
+**Deployment:** Vercel (frontend), Render (backend)
 
 ---
 
-### 3. Pagination & Sorting (Server-Side)
+## 🗄️ Database Schema (Prisma)
 
-The backend `/api/tasks` endpoint supports:
+```prisma
+generator client {
+  provider = "prisma-client-js"
+}
 
-- `page` – page number (default: `1`)
-- `pageSize` – items per page (default: `10`)
-- `sortBy` – one of:
-  - `endDate`
-  - `priority`
-  - `createdAt`
-- `sortOrder` – `asc` or `desc` (default: `asc`)
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
 
-The response includes:
+enum Priority {
+  low
+  medium
+  high
+}
 
-```json
-{
-  "status": true,
-  "tasks": [ ... ],
-  "pagination": {
-    "page": 1,
-    "pageSize": 10,
-    "total": 12,
-    "totalPages": 2
-  }
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  tasks     Task[]
+}
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+  title       String
+  description String
+  priority    Priority  @default(medium)
+  endDate     DateTime
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 ```
+
+---
+
+## 🔌 API Endpoints
+
+### **Auth Routes**
+
+| Method | Endpoint      | Description        |
+| ------ | ------------- | ------------------ |
+| POST   | /api/register | Register user      |
+| POST   | /api/login    | Login & return JWT |
+
+### **Task Routes (Protected)**
+
+| Method | Endpoint       | Description                             |
+| ------ | -------------- | --------------------------------------- |
+| GET    | /api/tasks     | Fetch user tasks (pagination + sorting) |
+| GET    | /api/tasks/:id | Get single task                         |
+| POST   | /api/tasks     | Create task                             |
+| PATCH  | /api/tasks/:id | Update task                             |
+| DELETE | /api/tasks/:id | Delete task                             |
+
+---
+
+## ⚙️ Environment Variables
+
+### **Backend (.env)**
+
+```
+DATABASE_URL=your_postgres_url
+JWT_SECRET=your_secret_key
+PORT=8000
+```
+
+### **Frontend (.env)**
+
+```
+REACT_APP_API_BASE_URL=https://task-manager-pern.onrender.com/api
+```
+
+---
+
+## 🏗️ Running Locally
+
+### 1. Clone the repo
+
+```
+git clone https://github.com/prasannakoirala58/Task-Manager-PERN.git
+cd Task-Manager-PERN
+```
+
+### 2. Install all dependencies
+
+```
+npm run install-all
+```
+
+### 3. Start frontend + backend together
+
+```
+npm run dev
+```
+
+➡ Runs:
+
+- Backend → [http://localhost:8000](http://localhost:8000)
+- Frontend → [http://localhost:3000](http://localhost:3000)
+
+---
+
+## ☁️ Deployment
+
+### **Backend (Render)**
+
+Build command:
+
+```
+npm install && npx prisma generate && npx prisma db push
+```
+
+Start command:
+
+```
+node app.js
+```
+
+### **Frontend (Vercel)**
+
+- Framework: **Create React App**
+- Build command:
+
+```
+npm run build
+```
+
+- Output folder:
+
+```
+build
+```
+
+---
+
+## 🔐 Why LocalStorage Instead of Cookies?
+
+For this assignment:
+
+- You’re not handling banking‑level security.
+- Render + Vercel separate domains make HTTP‑only cookies harder.
+- LocalStorage works perfectly and keeps the assignment simple.
+- Token is only used for Authorization headers.
+
+If building a production app → HTTP‑only cookies are ideal.
+
+---
+
+## 🧑‍💻 Author
+
+**Prasanna Koirala**
+📧 [prasanna2koirala@gmail.com](mailto:prasanna2koirala@gmail.com)
+
+---
+
+## ⭐ Final Notes
+
+This project demonstrates:
+
+- Clean PERN infrastructure
+- Authentication best practices
+- Prisma ORM + PostgreSQL usage
+- React + Redux state management
+- Sorting, pagination, filtering logic
+- Beautiful UI + fully deployed full‑stack app
+
+If this helped or impressed you — ⭐ star the repo!

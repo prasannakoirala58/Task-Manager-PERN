@@ -21,7 +21,8 @@ PostgreSQL • Express • Prisma • Node.js • React • Redux • TailwindCS
 
 ## 🖼 Preview
 
-![Task Manager Dashboard](/mnt/data/2c333abc-c65c-4589-8968-97245d1be848.png)
+<img width="1512" height="836" alt="image" src="https://github.com/user-attachments/assets/af180373-312f-4ed9-84b9-e77749771358" />
+
 
 ---
 

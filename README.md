@@ -2,218 +2,109 @@
 
 A full-stack task management dashboard with authentication, pagination, sorting, and priority management.
 
-**Author:** Prasanna Koirala
-**Email:** [prasanna2koirala@gmail.com](mailto:prasanna2koirala@gmail.com)
-**Tech Stack:** React • Redux • TailwindCSS • Node.js • Express • Prisma • PostgreSQL
+**Author:** Prasanna Koirala  
+**Email:** prasanna2koirala@gmail.com
+
+**Tech Stack:**  
+PostgreSQL • Express • Prisma • Node.js • React • Redux • TailwindCSS
 
 ---
 
-## 📸 Preview
+## 🔗 Live Demo
 
-![Preview-Image](image.png)
+- **Frontend (Vercel):** https://task-manager-pern-f5upc2dn2-furs-projects-8bede4b9.vercel.app/
+- **Backend API (Render):** https://task-manager-pern.onrender.com
+
+> You can sign up with a new account and start creating tasks right away.
+
+---
+
+## 🖼 Preview
+
+![Task Manager Dashboard](/mnt/data/2c333abc-c65c-4589-8968-97245d1be848.png)
 
 ---
 
 ## 🚀 Project Overview
 
-This is a fully functional **PERN (PostgreSQL + Express + React + Node)** task management application built as part of the Full Stack Developer Assignment.
+This is a fully functional **PERN (PostgreSQL + Express + React + Node)** task management application built as part of a Full Stack Developer Assignment.
 
 It includes:
 
-- **JWT authentication**
-- **CRUD operations** for tasks
-- **Server-side pagination**
-- **Sorting** by due date & priority
-- **Overdue task highlighting**
-- **Priority enum using PostgreSQL**
-- Prisma ORM + PostgreSQL
-- Responsive UI (TailwindCSS)
-- Global state via Redux
-- Deployment-ready (Render + Vercel)
+- ✅ **JWT authentication** (register + login)
+- ✅ **Secure password hashing** with bcrypt
+- ✅ **Protected task routes** using auth middleware
+- ✅ **CRUD operations** for tasks
+- ✅ **Server-side pagination**
+- ✅ **Sorting by due date & priority**
+- ✅ **Overdue task highlighting** on the UI
+- ✅ **Priority enum** using PostgreSQL + Prisma
+- ✅ **Responsive UI** with TailwindCSS
+- ✅ **Global state management** with Redux
 
 ---
 
-## ✨ Features
+## 🧩 Features in Detail
 
-### 🔐 User Authentication
+### 1. Authentication
 
-- JWT login & signup
-- Password hashing using bcrypt
-- Token stored in `localStorage` for simplicity
-- Protected API routes
+- **Register** with `name`, `email`, `password`.
+- **Login** with email & password.
+- On successful login/register:
+  - A **JWT token** is issued by the backend.
+  - The token is **stored in `localStorage`** on the frontend.
+  - Every API request attaches `Authorization: Bearer <token>` using an Axios interceptor.
+- **Auth middleware** (`auth.js`) verifies the token and injects `req.user` for all protected routes.
 
-### 📋 Task Management
-
-- Create, view, update, delete tasks
-- Priority (Low / Medium / High)
-- End date with overdue detection
-- Sort by:
-
-  - Due date (asc/desc)
-  - Priority
-  - Created date
-
-- Server-side pagination
-
-### 🎨 Frontend
-
-- Login & Signup pages
-- Dashboard with:
-
-  - Paginated task list
-  - Sorting dropdown
-  - Add/Edit/Delete actions
-
-- Responsive UI
-- Redux for global state
-
-### 🗄 Database (PostgreSQL)
-
-- `users` and `tasks` tables
-- Priority stored as PostgreSQL enum via Prisma
+> **Why localStorage?**  
+> For this assignment, localStorage keeps the implementation simple and makes it easy to demo. In a production setting, HTTP-only cookies would be preferred to reduce XSS attack surface.
 
 ---
 
-## 📁 Project Structure
+### 2. Task Management
 
-```
-/backend
-  app.js
-  prisma/schema.prisma
-  controllers/
-  routes/
-  middlewares/
-  package.json
-/frontend
-  src/
-    components/
-    redux/
-    api/
-    hooks/
-    pages/
-  package.json
-package.json (root)
-```
+Each task belongs to a single user and has:
+
+- `title`
+- `description`
+- `priority` (**low**, **medium**, **high**) – stored as a **PostgreSQL enum** via Prisma
+- `endDate` (due date)
+- `createdAt`, `updatedAt`
+
+Users can:
+
+- ➕ Create tasks
+- ✏️ Edit tasks
+- 🗑 Delete tasks
+- 👀 View **only their own** tasks
+
+**Overdue tasks** (due date in the past) are visually highlighted on the UI.
 
 ---
 
-## 🧪 API Endpoints
+### 3. Pagination & Sorting (Server-Side)
 
-### Auth
+The backend `/api/tasks` endpoint supports:
 
-| Method | Endpoint        | Description         |
-| ------ | --------------- | ------------------- |
-| POST   | `/api/register` | Register a new user |
-| POST   | `/api/login`    | Login user          |
+- `page` – page number (default: `1`)
+- `pageSize` – items per page (default: `10`)
+- `sortBy` – one of:
+  - `endDate`
+  - `priority`
+  - `createdAt`
+- `sortOrder` – `asc` or `desc` (default: `asc`)
 
-### Tasks
+The response includes:
 
-| Method | Endpoint                                        | Description   |
-| ------ | ----------------------------------------------- | ------------- |
-| GET    | `/api/tasks?page=&pageSize=&sortBy=&sortOrder=` | Fetch tasks   |
-| POST   | `/api/tasks`                                    | Create a task |
-| PATCH  | `/api/tasks/:id`                                | Update a task |
-| DELETE | `/api/tasks/:id`                                | Delete a task |
-
----
-
-## 🧰 Local Development
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/your-username/mern-task-manager.git
-cd mern-task-manager
+```json
+{
+  "status": true,
+  "tasks": [ ... ],
+  "pagination": {
+    "page": 1,
+    "pageSize": 10,
+    "total": 12,
+    "totalPages": 2
+  }
+}
 ```
-
-### 2. Install all dependencies
-
-```bash
-npm run install-all
-```
-
-### 3. Environment variables
-
-Create `/backend/.env`:
-
-```env
-DATABASE_URL=your_postgres_url
-JWT_SECRET=your_jwt_secret
-```
-
-### 4. Start the project
-
-```bash
-npm run dev
-```
-
-Runs backend on **8000** and frontend on **3000** using concurrently.
-
----
-
-## 🛠 Prisma Commands
-
-Run migrations:
-
-```bash
-cd backend
-npx prisma migrate dev
-```
-
-Open Prisma Studio:
-
-```bash
-npx prisma studio
-```
-
----
-
-## ☁️ Deployment
-
-### Backend → Render
-
-Build command:
-
-```bash
-npm install && npx prisma generate && npx prisma db push
-```
-
-Start command:
-
-```bash
-npm start
-```
-
-### Frontend → Vercel
-
-Add env:
-
-```
-REACT_APP_API_BASE_URL=https://your-backend-url.onrender.com/api
-```
-
----
-
-## 📽 Demo Video (Optional)
-
-Include a screen recording if deployment isn't provided.
-
----
-
-## ✔ Submission Checklist
-
-- [x] Full source code
-- [x] JWT Auth
-- [x] CRUD tasks
-- [x] Pagination
-- [x] Sorting
-- [x] README
-- [ ] Deployment links (optional)
-- [ ] Demo video (optional)
-
----
-
-## 👤 Author
-
-**Prasanna Koirala**
-📧 [prasanna2koirala@gmail.com](mailto:prasanna2koirala@gmail.com)
